@@ -126,7 +126,7 @@ create_package
     ;
 
 create_package_body
-    : CREATE (OR REPLACE)? PACKAGE BODY (schema_object_name '.')? package_name (IS | AS) package_obj_body* (BEGIN seq_of_statements | END package_name?) ';'
+    : CREATE (OR REPLACE)? PACKAGE BODY (schema_object_name '.')? package_name (IS | AS) package_obj_body* (BEGIN seq_of_statements)? END package_name? ';'
     ;
 
 // Create Package Specific Clauses
@@ -663,7 +663,7 @@ container_clause
 
 create_table
     : CREATE (GLOBAL TEMPORARY)? TABLE tableview_name 
-        LEFT_PAREN (','? datatype_null_enable)+
+        ( '(' (','? datatype_null_enable)+
         (',' CONSTRAINT constraint_name
           ( primary_key_clause
           | foreign_key_clause
@@ -671,7 +671,7 @@ create_table
           | check_constraint
           )
         )*
-        RIGHT_PAREN
+        ')' )?
         (ON COMMIT (DELETE | PRESERVE) ROWS)?
         (SEGMENT CREATION (IMMEDIATE | DEFERRED))?
         (PCTFREE pctfree=UNSIGNED_INTEGER
@@ -2167,7 +2167,7 @@ index_name
     ;
 
 cursor_name
-    : identifier
+    : general_element
     | bind_variable
     ;
 
